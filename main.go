@@ -1,4 +1,4 @@
-// backend/main.go (MongoDB 인증 로직 수정 완료)
+// backend/main.go 
 
 package main
 
