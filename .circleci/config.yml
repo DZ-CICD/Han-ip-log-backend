@@ -17,34 +17,23 @@ jobs:
     
     steps:
       - checkout
-
-      # SonarCloud 스캔
       - sonarcloud/scan
-
-      # Docker 빌드 및 Harbor 푸시
       - run:
           name: Build and Push Backend Image
           command: |
             # --- [설정] 백엔드 정보 ---
-            export IMAGE_NAME="haniplog-backend"  # ◀◀ 수정됨
+            export IMAGE_NAME="haniplog-backend"
             export HARBOR_PROJECT="haniplog"
             export HARBOR_DOMAIN="harbor.local.net"
             export IMAGE_TAG="v1.${CIRCLE_BUILD_NUM}"
-            
             export FULL_IMAGE_NAME="${HARBOR_DOMAIN}/${HARBOR_PROJECT}/${IMAGE_NAME}:${IMAGE_TAG}"
 
-            # 변수 전달
             echo "export IMAGE_NAME=$IMAGE_NAME" >> $BASH_ENV
             echo "export IMAGE_TAG=$IMAGE_TAG" >> $BASH_ENV
             echo "export FULL_IMAGE_NAME=$FULL_IMAGE_NAME" >> $BASH_ENV
 
-            echo "Logging into Harbor..."
             echo "$HARBOR_PASSWORD" | docker login -u "$HARBOR_USER" --password-stdin $HARBOR_DOMAIN
-            
-            echo "Building $FULL_IMAGE_NAME..."
             docker build -t $FULL_IMAGE_NAME .
-            
-            echo "Pushing $FULL_IMAGE_NAME to Harbor..."
             docker push $FULL_IMAGE_NAME
 
       # -------------------------------------------------------
@@ -55,40 +44,25 @@ jobs:
           command: |
             source $BASH_ENV
 
-            # Config Repo 주소
             CONFIG_REPO_URL="https://${GITHUB_TOKEN}@github.com/DZ-CICD/Han-ip-log-config.git"
-            
             TARGET_FILE="backend/backend.yaml"
 
-            echo "Cloning Config Repository..."
             git clone $CONFIG_REPO_URL config_repo_temp
             cd config_repo_temp
 
-            # Git 사용자 설정
             git config user.email "circleci@haniplog.com"
             git config user.name "CircleCI Bot"
             
-            echo "Updating $TARGET_FILE with image: $FULL_IMAGE_NAME"
-            
-            # ★ 수정됨: sed 명령어가 'backend'를 찾도록 변경
             sed -i "s|image:.*backend:.*|image: ${FULL_IMAGE_NAME}|g" $TARGET_FILE
             
-            # 변경 내용 확인
-            echo "Modified content:"
-            cat $TARGET_FILE | grep "image:"
-            
-            # Git Push
             git add $TARGET_FILE
-            # [skip ci] 필수
-            git commit -m "Update Frontend image to ${IMAGE_TAG} [skip ci]"
+            # 🟢 [수정됨] Git Commit 메시지
+            git commit -m "Update Backend image to ${IMAGE_TAG} [skip ci]"
             git push origin main
 
-      # 슬랙 알림 (실패)
       - slack/notify:
           event: fail
           template: basic_fail_1
-      
-      # 슬랙 알림 (성공)
       - slack/notify:
           event: pass
           template: basic_success_1
@@ -97,7 +71,7 @@ jobs:
 # 3. WORKFLOWS
 # -----------------
 workflows:
-  frontend_workflow: # ◀◀ 이름 변경 (선택사항이지만 추천)
+  backend_workflow: # 🟢 [수정됨] 워크플로우 이름 통일
     jobs:
       - build-scan-and-push:
           context: 
