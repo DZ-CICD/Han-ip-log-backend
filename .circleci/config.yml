@@ -18,7 +18,7 @@ jobs:
     steps:
       - checkout
       - sonarcloud/scan:
-          cache_version: 3  # 👈 (기본값은 1입니다. 이걸 2로 바꾸면 새 캐시를 만듭니다!)
+          cache_version: 3  # 캐시 버전!!!!!
 
           
       # - run:
