@@ -5,7 +5,6 @@ FROM golang:1.22-alpine AS builder
 
 WORKDIR /app
 
-# 의존성 파일만 먼저 복사 
 COPY go.mod go.sum ./
 # 의존성 다운로드
 RUN go mod download
