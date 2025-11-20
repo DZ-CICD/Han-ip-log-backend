@@ -17,8 +17,21 @@ jobs:
     
     steps:
       - checkout
-      - sonarcloud/scan:
-          cache_version: 2  # 👈 (기본값은 1입니다. 이걸 2로 바꾸면 새 캐시를 만듭니다!)
+      - run:
+          name: Install Sonar Scanner
+          command: |
+            wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
+            unzip sonar-scanner-cli-5.0.1.3006-linux.zip
+            mv sonar-scanner-5.0.1.3006-linux sonar-scanner
+
+      - run:
+          name: Run SonarCloud Analysis
+          command: |
+            ./sonar-scanner/bin/sonar-scanner \
+              -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+              -Dsonar.organization=$SONAR_ORG \
+              -Dsonar.login=$SONAR_TOKEN
+              -Dsonar.sources=.
 
           
       # - run:
