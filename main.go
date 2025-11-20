@@ -25,7 +25,7 @@ import (
 )
 
 var jwtKey = []byte(os.Getenv("JWT_SECRET_KEY"))
-
+var key = "asjd"
 // 1. DB 저장을 위한 원본 구조체 (BSON)
 type User struct {
    ID       primitive.ObjectID `bson:"_id,omitempty"`
