@@ -14,6 +14,7 @@ COPY . .
 
 # Go 애플리케이션 빌드 (CGO_ENABLED=0은 정적 바이너리 생성)
 RUN CGO_ENABLED=0 GOOS=linux go build -o /main .
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
 # --- 2단계: 최종 실행 단계 ---
 FROM alpine:latest
