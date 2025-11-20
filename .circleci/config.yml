@@ -28,10 +28,11 @@ jobs:
           name: Run SonarCloud Analysis
           command: |
             ./sonar-scanner/bin/sonar-scanner \
-              -Dsonar.projectKey=$SONAR_PROJECT_KEY \
-              -Dsonar.organization=$SONAR_ORG \
-              -Dsonar.login=$SONAR_TOKEN \
+              -Dsonar.projectKey="$SONAR_PROJECT_KEY" \
+              -Dsonar.organization="$SONAR_ORG" \
+              -Dsonar.login="$SONAR_TOKEN" \
               -Dsonar.sources=.
+
 
           
       # - run:
