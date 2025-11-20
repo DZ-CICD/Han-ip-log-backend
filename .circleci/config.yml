@@ -30,7 +30,7 @@ jobs:
             ./sonar-scanner/bin/sonar-scanner \
               -Dsonar.projectKey=$SONAR_PROJECT_KEY \
               -Dsonar.organization=$SONAR_ORG \
-              -Dsonar.login=$SONAR_TOKEN
+              -Dsonar.login=$SONAR_TOKEN \
               -Dsonar.sources=.
 
           
