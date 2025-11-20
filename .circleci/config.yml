@@ -19,6 +19,8 @@ jobs:
       - checkout
       - sonarcloud/scan:
           cache_version: 2  # 👈 (기본값은 1입니다. 이걸 2로 바꾸면 새 캐시를 만듭니다!)
+
+          
       # - run:
       #     name: Check SonarCloud Quality Gate
       #     command: |
